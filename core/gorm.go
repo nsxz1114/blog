@@ -2,11 +2,14 @@ package core
 
 import (
 	"fmt"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/nsxz1114/blog/global"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"time"
 )
 
 func InitGorm() *gorm.DB {
@@ -24,12 +27,29 @@ func InitGorm() *gorm.DB {
 		// 只打印错误的sql
 		mysqlLogger = logger.Default.LogMode(logger.Error)
 	}
+
 	//通过gorm.Open()函数连接到MySQL数据库，并设置日志记录器为上一步配置的mysqlLogger
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: mysqlLogger,
 	})
 	if err != nil {
-		lg.Fatal(fmt.Sprintf("[%s] mysql连接失败", dsn))
+		if strings.Contains(err.Error(), "1049") {
+			global.Log.Error(fmt.Sprintf("数据库不存在: %s", global.Config.Mysql.DB))
+			//自动创建
+			dsn := global.Config.Mysql.DSNWithoutDB()
+			serverDB, _ := gorm.Open(mysql.Open(dsn), &gorm.Config{
+				Logger: mysqlLogger,
+			})
+			// 执行创建数据库SQL
+			createDBSQL := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` CHARSET utf8mb4 COLLATE utf8mb4_general_ci", global.Config.Mysql.DB)
+			if err = serverDB.Exec(createDBSQL).Error; err != nil {
+				global.Log.Fatal(fmt.Sprintf("创建数据库失败: %v", err))
+			}
+			global.Log.Info(fmt.Sprintf("数据库 %s 创建成功,请创建表结构", global.Config.Mysql.DB))
+			os.Exit(0)
+		} else {
+			global.Log.Fatal(fmt.Sprintf("[%s] mysql连接失败: %s", dsn, err.Error()))
+		}
 	}
 	sqlDB, _ := db.DB()
 	// 最大空闲连接数

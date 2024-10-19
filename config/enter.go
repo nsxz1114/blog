@@ -20,6 +20,10 @@ func (m Mysql) Dsn() string {
 	return m.User + ":" + m.Password + "@tcp(" + m.Host + ":" + strconv.Itoa(m.Port) + ")/" + m.DB + "?charset=utf8mb4&parseTime=True&loc=Local"
 }
 
+func (m Mysql) DSNWithoutDB() string {
+	return m.User + ":" + m.Password + "@tcp(" + m.Host + ":" + strconv.Itoa(m.Port) + ")/" + "?charset=utf8mb4&parseTime=True&loc=Local"
+}
+
 func (e Es) Dsn() string {
 	return "http://" + e.Host + ":" + strconv.Itoa(e.Port)
 }
