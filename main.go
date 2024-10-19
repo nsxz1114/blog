@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/nsxz1114/blog/core"
 	"github.com/nsxz1114/blog/flags"
 	"github.com/nsxz1114/blog/global"
@@ -30,7 +31,7 @@ func main() {
 		global.Log.Fatal("fail to init trans", zap.Error(err))
 	}
 	utils.PrintSystem()
-	router := routers.InitRouter()
+	router := router.InitRouter()
 	err = router.Run(fmt.Sprintf(":%d", global.Config.System.Port))
 	if err != nil {
 		global.Log.Fatal("fail to start server", zap.Error(err))

@@ -1,4 +1,4 @@
-package routers
+package router
 
 import (
 	"github.com/nsxz1114/blog/api"

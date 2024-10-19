@@ -1,13 +1,14 @@
-package routers
+package router
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/nsxz1114/blog/core"
 	_ "github.com/nsxz1114/blog/docs"
 	"github.com/nsxz1114/blog/global"
 	swaggerFiles "github.com/swaggo/files"
 	gs "github.com/swaggo/gin-swagger"
-	"net/http"
 )
 
 type RouterGroup struct {
