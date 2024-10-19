@@ -52,7 +52,7 @@ func Newflags() {
 	}
 	app.Commands = []*cli.Command{
 		{
-			Name:    "db",
+			Name:    "database",
 			Aliases: []string{"db"},
 			Usage:   "create table",
 			Action:  DB,
@@ -85,7 +85,7 @@ func Newflags() {
 			},
 		},
 		{
-			Name:    "es",
+			Name:    "elasticsearch",
 			Aliases: []string{"es"},
 			Usage:   "create a elasticsearch index",
 			Action:  EsIndexCreate,
