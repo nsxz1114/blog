@@ -5,7 +5,7 @@ import (
 	"github.com/nsxz1114/blog/core"
 	"github.com/nsxz1114/blog/flags"
 	"github.com/nsxz1114/blog/global"
-	"github.com/nsxz1114/blog/routers"
+	"github.com/nsxz1114/blog/router"
 	"github.com/nsxz1114/blog/utils"
 	"go.uber.org/zap"
 )
