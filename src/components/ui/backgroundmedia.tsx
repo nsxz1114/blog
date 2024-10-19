@@ -101,7 +101,7 @@ const BackgroundMedia: React.FC<BackgroundMediaProps> = memo(
             src={src}
             alt={alt}
             loading="lazy" // 懒加载图片
-            className={`${commonProps.className} rounded-br-[88px]`}
+            className={`${commonProps.className}`}
           />
         );
       }
