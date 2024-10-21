@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	ctype "github.com/nsxz1114/blog/models/ctype"
 	"github.com/nsxz1114/blog/models/res"
-	"github.com/nsxz1114/blog/service/redis_ser"
 	"github.com/nsxz1114/blog/utils"
 )
 
@@ -86,28 +85,58 @@ func JwtAuth() gin.HandlerFunc {
 
 func JwtAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.Request.Header.Get("token")
-		if token == "" {
-			res.FailWithMessage("未携带token", c)
+		authHeader := c.Request.Header.Get("Authorization")
+		if authHeader == "" {
+			res.FailWithMessage("未登录", c)
 			c.Abort()
 			return
 		}
-		claims, err := utils.ParseToken(token)
+		parts := strings.SplitN(authHeader, " ", 2)
+		if !(len(parts) == 2 && parts[0] == "Bearer") {
+			res.FailWithMessage("无效的token", c)
+			c.Abort()
+			return
+		}
+		accessToken := parts[1]
+		mc, err := utils.ParseToken(accessToken)
 		if err != nil {
-			res.FailWithMessage("token错误", c)
+			if v, ok := err.(*jwt.ValidationError); ok && v.Errors == jwt.ValidationErrorExpired {
+				rTokenCookie, err := c.Request.Cookie("refresh_token")
+				if err != nil {
+					res.FailWithMessage("未登录", c) // 缺少 Refresh Token
+					c.Abort()
+					return
+				}
+				newAToken, newRToken, err := utils.RefreshToken(accessToken, rTokenCookie.Value)
+				if err != nil {
+					res.FailWithMessage("无效的token", c)
+					c.Abort()
+					return
+				}
+				if newRToken != "" {
+					http.SetCookie(c.Writer, &http.Cookie{
+						Name:     "refresh_token",
+						Value:    newRToken,
+						HttpOnly: true,
+						Secure:   true,
+						SameSite: http.SameSiteStrictMode,
+						Path:     "/",
+					})
+				}
+				res.OkWithData(newAToken, c)
+				c.Abort()
+				return
+			}
+			res.FailWithMessage("无效的token", c)
 			c.Abort()
 			return
 		}
-		if redis_ser.CheckLogout(token) {
-			res.FailWithMessage("token已失效", c)
-			c.Abort()
-			return
-		}
-		if claims.PayLoad.Role != int(ctype.PermissionAdmin) {
+		if mc.PayLoad.Role != int(ctype.PermissionAdmin) {
 			res.FailWithMessage("权限错误", c)
 			c.Abort()
 			return
 		}
-		c.Set("claims", claims)
+		c.Set("claims", mc)
+		c.Next()
 	}
 }
