@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nsxz1114/blog/models/res"
 	"github.com/nsxz1114/blog/utils"
 )
 
@@ -11,14 +12,14 @@ func (s System) RefreshToken(c *gin.Context) {
 	// 从 Cookie 中获取 Refresh Token
 	cookie, err := c.Request.Cookie("refresh_token")
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing refresh token"})
+		res.FailWithMessage("未登录", c)
 		return
 	}
 
 	// 使用 Refresh Token 获取新的 Access Token
 	newAccessToken, newRefreshToken, err := utils.RefreshToken("", cookie.Value)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid refresh token"})
+		res.FailWithMessage("无效的token", c)
 		return
 	}
 
@@ -35,7 +36,6 @@ func (s System) RefreshToken(c *gin.Context) {
 	}
 
 	// 返回新的 Access Token
-	c.JSON(http.StatusOK, gin.H{
-		"access_token": newAccessToken,
-	})
+	res.OkWithData(newAccessToken, c)
+
 }
