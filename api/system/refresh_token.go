@@ -7,7 +7,7 @@ import (
 	"github.com/nsxz1114/blog/utils"
 )
 
-func refreshTokenHandler(c *gin.Context) {
+func (s System) refreshTokenHandler(c *gin.Context) {
 	// 从 Cookie 中获取 Refresh Token
 	cookie, err := c.Request.Cookie("refresh_token")
 	if err != nil {

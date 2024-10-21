@@ -1,6 +1,7 @@
-package captcha
+package system
 
 import (
+
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"github.com/nsxz1114/blog/global"
@@ -20,7 +21,7 @@ type CaptchaResponse struct {
 // @Router /api/captcha [get]
 // @Produce json
 // @Success 200 {object} res.Response{data=CaptchaResponse}
-func (Captcha *Captcha) CaptchaCreate(c *gin.Context) {
+func (s System) CaptchaCreate(c *gin.Context) {
 	driver := base64Captcha.NewDriverDigit(
 		global.Config.Captcha.ImgHeight,
 		global.Config.Captcha.ImgWidth,
