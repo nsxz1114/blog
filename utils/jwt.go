@@ -43,7 +43,7 @@ type MyClaims struct {
 // }
 
 // ParseToken 解析JWT
-func ParseToken(tokenString string) (*MyClaims, error) {
+func ParseToken(tokenString string) (*CustomClaims, error) {
 	// 解析token
 	var mc = new(MyClaims)
 	token, err := jwt.ParseWithClaims(tokenString, mc, func(token *jwt.Token) (interface{}, error) {

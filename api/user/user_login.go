@@ -1,8 +1,10 @@
 package user
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"github.com/nsxz1114/blog/api/captcha"
+	"github.com/nsxz1114/blog/api/system"
 	"github.com/nsxz1114/blog/global"
 	"github.com/nsxz1114/blog/models"
 	"github.com/nsxz1114/blog/models/res"
@@ -23,7 +25,7 @@ func (u User) UserLogin(c *gin.Context) {
 		res.FailWithError(err, &req, c)
 		return
 	}
-	if req.Captcha != "" && req.CaptchaId != "" && captcha.Store.Verify(req.CaptchaId, req.Captcha, true) {
+	if req.Captcha != "" && req.CaptchaId != "" && system.Store.Verify(req.CaptchaId, req.Captcha, true) {
 		var user models.UserModel
 		err = global.DB.Take(&user, "account=?", req.Account).Error
 		if err != nil {
@@ -35,7 +37,7 @@ func (u User) UserLogin(c *gin.Context) {
 			res.FailWithMessage("用户名或密码错误", c)
 			return
 		}
-		token, err := utils.GetToken(utils.PayLoad{
+		aToken, rToken, err := utils.GenToken2(utils.PayLoad{
 			Account: req.Account,
 			UserID:  user.ID,
 			Role:    int(user.Role)})
@@ -44,8 +46,16 @@ func (u User) UserLogin(c *gin.Context) {
 			res.FailWithMessage("登录失败", c)
 			return
 		}
-		c.Request.Header.Set("token", token)
-		res.OkWithData(token, c)
+		// 设置 Refresh Token 到 Cookie
+		http.SetCookie(c.Writer, &http.Cookie{
+			Name:     "refresh_token",
+			Value:    rToken,
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteStrictMode,
+			Path:     "/",
+		})
+		res.OkWithData(aToken, c)
 		return
 	}
 	res.FailWithMessage("验证码错误", c)
