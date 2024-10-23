@@ -12,6 +12,7 @@ import (
 	"github.com/nsxz1114/blog/models/res"
 	"github.com/nsxz1114/blog/service/search_ser"
 	"github.com/nsxz1114/blog/utils"
+	"go.uber.org/zap"
 )
 
 type ArticleRequest struct {
@@ -34,11 +35,13 @@ func (a Article) ArticleCreate(c *gin.Context) {
 	userId := claims.UserID
 	html, err := utils.ConvertMarkdownToHTML(req.Content)
 	if err != nil {
+		global.Log.Error("ConvertMarkdownToHTML err", zap.Error(err))
 		res.FailWithMessage("文章发布失败", c)
 		return
 	}
 	content, err := utils.ConvertHTMLToMarkdown(html)
 	if err != nil {
+		global.Log.Error("ConvertHTMLToMarkdown err", zap.Error(err))
 		res.FailWithMessage("文章发布失败", c)
 		return
 	}
@@ -47,7 +50,7 @@ func (a Article) ArticleCreate(c *gin.Context) {
 		var imageIDList []uint
 		global.DB.Model(models.ImageModel{}).Select("id").Scan(&imageIDList)
 		if len(imageIDList) == 0 {
-			res.FailWithMessage("暂无图片", c)
+			res.FailWithMessage("找不到该图片", c)
 			return
 		}
 		rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -57,12 +60,14 @@ func (a Article) ArticleCreate(c *gin.Context) {
 	var coverUrl string
 	err = global.DB.Model(models.ImageModel{}).Where("id = ?", req.CoverID).Select("path").Scan(&coverUrl).Error
 	if err != nil {
+		global.Log.Error("path err", zap.Error(err))
 		res.FailWithMessage("文章发布失败", c)
 		return
 	}
 	var user models.UserModel
 	err = global.DB.Where("id = ?", userId).First(&user).Error
 	if err != nil {
+		global.Log.Error("id err", zap.Error(err))
 		res.FailWithMessage("文章发布失败", c)
 		return
 	}
@@ -89,8 +94,9 @@ func (a Article) ArticleCreate(c *gin.Context) {
 	}
 	err = article.CreateDoc()
 	if err != nil {
+		global.Log.Error("CreateDoc err", zap.Error(err))
 		res.FailWithMessage("文章发布失败", c)
 		return
 	}
-	res.OkWithMessage("文章发布成功", c)
+	res.Ok(c)
 }

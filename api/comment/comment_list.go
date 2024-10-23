@@ -15,7 +15,7 @@ func (comment Comment) CommentList(c *gin.Context) {
 	var req CommentListRequest
 	err := c.ShouldBindUri(&req)
 	if err != nil {
-		res.FailWithError(err, &req, c)
+		res.FailWithCode(res.CodeInvalidParam, c)
 		return
 	}
 	commentList := models.FindArticleComment(req.ID)
@@ -26,5 +26,5 @@ func (comment Comment) CommentList(c *gin.Context) {
 		res.OkWithList(list, 0, c)
 		return
 	}
-	res.OkWithList(data, int64(len(commentList)), c)
+	res.OkWithList(data, len(commentList), c)
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/nsxz1114/blog/models"
 	"github.com/nsxz1114/blog/models/res"
 	"github.com/nsxz1114/blog/utils"
+	"go.uber.org/zap"
 )
 
 type MessageCreateRequest struct {
@@ -17,7 +18,7 @@ func (m Message) MessageCreate(c *gin.Context) {
 	var req MessageCreateRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		res.FailWithError(err, &req, c)
+		res.FailWithCode(res.CodeInvalidParam, c)
 		return
 	}
 	var sendUser, recUser models.UserModel
@@ -26,11 +27,13 @@ func (m Message) MessageCreate(c *gin.Context) {
 	claims := _claims.(*utils.CustomClaims)
 	err = global.DB.Take(&sendUser, claims.UserID).Error
 	if err != nil {
+		global.Log.Error("Take err", zap.Error(err))
 		res.FailWithMessage("消息发送失败", c)
 		return
 	}
 	err = global.DB.Take(&recUser, req.RevUserID).Error
 	if err != nil {
+		global.Log.Error("Take err", zap.Error(err))
 		res.FailWithMessage("消息发送失败", c)
 		return
 	}
@@ -45,8 +48,9 @@ func (m Message) MessageCreate(c *gin.Context) {
 		Content:          req.Content,
 	}).Error
 	if err != nil {
+		global.Log.Error("Take err", zap.Error(err))
 		res.FailWithMessage("消息发送失败", c)
 		return
 	}
-	res.OkWithMessage("消息发送成功", c)
+	res.Ok(c)
 }

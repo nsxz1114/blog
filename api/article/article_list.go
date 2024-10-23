@@ -15,9 +15,9 @@ func (a Article) ArticleList(c *gin.Context) {
 	var req ArticleListRequest
 	err := c.ShouldBindQuery(&req)
 	if err != nil {
-		res.FailWithError(err, &req, c)
+		res.FailWithCode(res.CodeInvalidParam, c)
 		return
 	}
 	articles := search_ser.SearchAllDocuments(req.PageInfo)
-	res.OkWithList(articles, int64(len(articles)), c)
+	res.OkWithList(articles, len(articles), c)
 }

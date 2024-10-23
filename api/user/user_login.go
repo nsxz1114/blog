@@ -9,6 +9,7 @@ import (
 	"github.com/nsxz1114/blog/models"
 	"github.com/nsxz1114/blog/models/res"
 	"github.com/nsxz1114/blog/utils"
+	"go.uber.org/zap"
 )
 
 type UserLoginRequest struct {
@@ -22,13 +23,14 @@ func (u User) UserLogin(c *gin.Context) {
 	var req UserLoginRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		res.FailWithError(err, &req, c)
+		res.FailWithCode(res.CodeInvalidParam, c)
 		return
 	}
 	if req.Captcha != "" && req.CaptchaId != "" && system.Store.Verify(req.CaptchaId, req.Captcha, true) {
 		var user models.UserModel
 		err = global.DB.Take(&user, "account=?", req.Account).Error
 		if err != nil {
+			global.Log.Error("Take err", zap.Error(err))
 			res.FailWithMessage("用户名或密码错误", c)
 			return
 		}
@@ -42,7 +44,7 @@ func (u User) UserLogin(c *gin.Context) {
 			UserID:  user.ID,
 			Role:    int(user.Role)})
 		if err != nil {
-			global.Log.Error("token生成失败", err.Error())
+			global.Log.Error("token生成失败", zap.Error(err))
 			res.FailWithMessage("登录失败", c)
 			return
 		}

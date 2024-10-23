@@ -13,7 +13,8 @@ import (
 func (i Image) ImageUpload(c *gin.Context) {
 	form, err := c.MultipartForm()
 	if err != nil {
-		res.FailWithMessage(err.Error(), c)
+		global.Log.Error("MultipartForm err", zap.Error(err))
+		res.FailWithMessage("图片上传失败", c)
 		return
 	}
 	fileList, ok := form.File["images"]
@@ -27,6 +28,7 @@ func (i Image) ImageUpload(c *gin.Context) {
 	if err != nil {
 		err = os.MkdirAll(basePath, fs.ModePerm)
 		if err != nil {
+			global.Log.Error("MkdirAll err", zap.Error(err))
 			res.FailWithMessage("图片上传失败", c)
 			return
 		}
@@ -42,7 +44,7 @@ func (i Image) ImageUpload(c *gin.Context) {
 		}
 		err = c.SaveUploadedFile(file, serviceRes.FileName)
 		if err != nil {
-			global.Log.Error("save file err:", zap.Error(err))
+			global.Log.Error("save file err", zap.Error(err))
 			serviceRes.Msg = err.Error()
 			serviceRes.IsSuccess = false
 			resList = append(resList, serviceRes)

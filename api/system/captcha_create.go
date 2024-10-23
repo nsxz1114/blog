@@ -1,7 +1,6 @@
 package system
 
 import (
-
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"github.com/nsxz1114/blog/global"
@@ -33,6 +32,7 @@ func (s System) CaptchaCreate(c *gin.Context) {
 	id, b64s, _, err := captcha.Generate()
 	if err != nil {
 		global.Log.Error("fail to generate the captcha", zap.Error(err))
+		res.FailWithMessage("验证码生成失败", c)
 		return
 	}
 	res.OkWithData(CaptchaResponse{

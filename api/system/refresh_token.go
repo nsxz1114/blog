@@ -4,22 +4,26 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nsxz1114/blog/global"
 	"github.com/nsxz1114/blog/models/res"
 	"github.com/nsxz1114/blog/utils"
+	"go.uber.org/zap"
 )
 
 func (s System) RefreshToken(c *gin.Context) {
 	// 从 Cookie 中获取 Refresh Token
 	cookie, err := c.Request.Cookie("refresh_token")
 	if err != nil {
-		res.FailWithMessage("未登录", c)
+		global.Log.Error("refresh_token err", zap.Error(err))
+		res.FailWithCode(res.CodeNeedLogin, c)
 		return
 	}
 
 	// 使用 Refresh Token 获取新的 Access Token
 	newAccessToken, newRefreshToken, err := utils.RefreshToken("", cookie.Value)
 	if err != nil {
-		res.FailWithMessage("无效的token", c)
+		global.Log.Error("refresh_token err", zap.Error(err))
+		res.FailWithCode(res.CodeInvalidToken, c)
 		return
 	}
 

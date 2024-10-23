@@ -7,6 +7,7 @@ import (
 	"github.com/nsxz1114/blog/models/res"
 	"github.com/nsxz1114/blog/service/search_ser"
 	"github.com/nsxz1114/blog/utils"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -20,7 +21,7 @@ func (comment Comment) CommentCreate(c *gin.Context) {
 	var req CommentCreateRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		res.FailWithError(err, &req, c)
+		res.FailWithCode(res.CodeInvalidParam, c)
 		return
 	}
 
@@ -28,7 +29,7 @@ func (comment Comment) CommentCreate(c *gin.Context) {
 	claims := _claims.(*utils.CustomClaims)
 	exist := search_ser.DocIsExistById(req.ArticleID)
 	if exist == false {
-		res.FailWithMessage("评论失败", c)
+		res.FailWithMessage("文章不存在", c)
 		return
 	}
 
@@ -36,10 +37,7 @@ func (comment Comment) CommentCreate(c *gin.Context) {
 		var parentComment models.CommentModel
 		err = global.DB.Take(&parentComment, req.ParentCommentID).Error
 		if err != nil {
-			res.FailWithMessage("评论失败", c)
-			return
-		}
-		if parentComment.ArticleID != req.ArticleID {
+			global.Log.Error("Take err", zap.Error(err))
 			res.FailWithMessage("评论失败", c)
 			return
 		}
@@ -52,9 +50,9 @@ func (comment Comment) CommentCreate(c *gin.Context) {
 		UserID:          claims.UserID,
 	}).Error
 	if err != nil {
+		global.Log.Error("Create err", zap.Error(err))
 		res.FailWithMessage("评论失败", c)
 		return
 	}
-	res.OkWithMessage("文章评论成功", c)
-	return
+	res.Ok(c)
 }

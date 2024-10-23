@@ -5,6 +5,7 @@ import (
 	"github.com/nsxz1114/blog/global"
 	"github.com/nsxz1114/blog/models"
 	"github.com/nsxz1114/blog/models/res"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -16,12 +17,13 @@ func (comment Comment) CommentDelete(c *gin.Context) {
 	var req CommentIDRequest
 	err := c.ShouldBindUri(&req)
 	if err != nil {
-		res.FailWithError(err, &req, c)
+		res.FailWithCode(res.CodeInvalidParam, c)
 		return
 	}
 	var commentModel models.CommentModel
 	err = global.DB.Take(&commentModel, req.ID).Error
 	if err != nil {
+		global.Log.Error("Take err", zap.Error(err))
 		res.FailWithMessage("删除失败", c)
 		return
 	}
@@ -43,6 +45,5 @@ func (comment Comment) CommentDelete(c *gin.Context) {
 	for _, id := range deleteCommentIDList {
 		global.DB.Model(models.CommentModel{}).Delete("id = ?", id)
 	}
-
-	res.OkWithMessage("评论删除成功", c)
+	res.Ok(c)
 }
