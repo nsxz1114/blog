@@ -15,7 +15,6 @@ func InitRedis() *redis.Client {
 		DB:       redisConf.DB,
 		PoolSize: redisConf.PoolSize,
 	})
-	//测试连接
 	_, err := rdb.Ping(context.Background()).Result()
 	if err != nil {
 		global.Log.Fatal("init redis fail", zap.Error(err))

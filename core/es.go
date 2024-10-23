@@ -1,9 +1,9 @@
 package core
 
 import (
-	"fmt"
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/nsxz1114/blog/global"
+	"go.uber.org/zap"
 )
 
 func InitEs() *elasticsearch.TypedClient {
@@ -15,7 +15,7 @@ func InitEs() *elasticsearch.TypedClient {
 	}
 	es, err := elasticsearch.NewTypedClient(cfg)
 	if err != nil {
-		global.Log.Fatal(fmt.Sprintf("[%s] es连接失败", dsn))
+		global.Log.Fatalf("[%s] es连接失败", dsn, zap.Error(err))
 	}
 	return es
 }

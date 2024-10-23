@@ -13,9 +13,9 @@ import (
 
 // @title github.com/nsxz1114/blog
 // @version 1.0
-// @contact.name Axios
+// @contact.name nsxz
 // @contact.email 1790146932@qq.com
-// @host 127.0.0.1:8080
+// @host 127.0.0.1:8888
 // @BasePath /
 func main() {
 	core.InitConf()
@@ -26,7 +26,7 @@ func main() {
 	global.AddrDB = core.InitAddrDB()
 	utils.Init(global.Config.System.StartTime, global.Config.System.MachineID)
 	flags.Newflags()
-	err := utils.InitTrans("en")
+	err := utils.InitTrans("zh")
 	if err != nil {
 		global.Log.Fatal("fail to init trans", zap.Error(err))
 	}

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/nsxz1114/blog/global"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -43,15 +44,18 @@ func InitGorm() *gorm.DB {
 			// 执行创建数据库SQL
 			createDBSQL := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` CHARSET utf8mb4 COLLATE utf8mb4_general_ci", global.Config.Mysql.DB)
 			if err = serverDB.Exec(createDBSQL).Error; err != nil {
-				global.Log.Fatal(fmt.Sprintf("创建数据库失败: %v", err))
+				global.Log.Fatal("创建数据库失败", zap.Error(err))
 			}
 			global.Log.Info(fmt.Sprintf("数据库 %s 创建成功,请创建表结构", global.Config.Mysql.DB))
 			os.Exit(0)
 		} else {
-			global.Log.Fatal(fmt.Sprintf("[%s] mysql连接失败: %s", dsn, err.Error()))
+			global.Log.Fatalf("[%s] mysql连接失败", dsn, zap.Error(err))
 		}
 	}
-	sqlDB, _ := db.DB()
+	sqlDB, err := db.DB()
+	if err != nil {
+		global.Log.Fatal("数据库连接失败", zap.Error(err))
+	}
 	// 最大空闲连接数
 	sqlDB.SetMaxIdleConns(global.Config.Mysql.MaxIdleConns)
 	// 最多可容纳

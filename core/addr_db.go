@@ -10,7 +10,7 @@ import (
 func InitAddrDB() *geoip2.DBReader {
 	db, err := geoip2db.NewGeoipDbByStatik()
 	if err != nil {
-		global.Log.Fatal("InitAddrDB err:", zap.Error(err))
+		global.Log.Fatal("InitAddrDB err", zap.Error(err))
 	}
 	return db
 }
