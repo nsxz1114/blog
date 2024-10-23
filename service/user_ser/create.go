@@ -31,7 +31,7 @@ func CreateUser(nickname, account, password, ip string, role ctype.Role) (err er
 		Address:  addr,
 	}).Error
 	if err != nil {
-		global.Log.Error("create user err:", err)
+		global.Log.Error("create user err", err)
 		return err
 	}
 	return nil

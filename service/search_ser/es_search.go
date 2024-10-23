@@ -24,7 +24,7 @@ func SearchDocumentTerm(field, key string) (result []models.Article) {
 		}).
 		Do(context.Background())
 	if err != nil {
-		global.Log.Error("search document failed, err:", zap.Error(err))
+		global.Log.Error("search document failed, err", zap.Error(err))
 		return result
 	}
 	for _, hit := range resp.Hits.Hits {
@@ -106,7 +106,7 @@ func SearchDocumentMultiMatchByTitle(fields []string, key string) (result []Arti
 		}).Source_(fields).
 		Do(context.Background())
 	if err != nil {
-		global.Log.Error("search document failed, err:", zap.Error(err))
+		global.Log.Error("search document failed, err", zap.Error(err))
 		return result
 	}
 	for _, hit := range resp.Hits.Hits {

@@ -18,7 +18,7 @@ func EsExport(c *cli.Context) (err error) {
 		MatchAll: &types.MatchAllQuery{},
 	}).Do(context.Background())
 	if err != nil {
-		global.Log.Error("EsExport err:", zap.Error(err))
+		global.Log.Error("EsExport err", zap.Error(err))
 		return err
 	}
 
@@ -38,12 +38,12 @@ func EsExport(c *cli.Context) (err error) {
 	byteData, _ := json.Marshal(data)
 	_, err = file.Write(byteData)
 	if err != nil {
-		global.Log.Error("EsExport err:", err.Error())
+		global.Log.Error("EsExport err", err.Error())
 		return err
 	}
 	err = file.Close()
 	if err != nil {
-		global.Log.Error("EsExport err:", err.Error())
+		global.Log.Error("EsExport err", err.Error())
 		return err
 	}
 

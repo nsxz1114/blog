@@ -55,13 +55,13 @@ func ImageUploadService(file *multipart.FileHeader) (res FileUploadResponse) {
 
 	fileObj, err := file.Open()
 	if err != nil {
-		global.Log.Error("open fileObj err:", zap.Error(err))
+		global.Log.Error("open fileObj err", zap.Error(err))
 		return
 	}
 
 	byteData, err := io.ReadAll(fileObj)
 	if err != nil {
-		global.Log.Error("read file err:", zap.Error(err))
+		global.Log.Error("read file err", zap.Error(err))
 		return
 	}
 
