@@ -14,7 +14,7 @@ func ConvertMarkdownToHTML(content string) (string, error) {
 	unsafe := blackfriday.MarkdownCommon([]byte(content))
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(string(unsafe)))
 	if err != nil {
-		global.Log.Error("convert markdown to html err:", err)
+		global.Log.Error("convert markdown to html err", err)
 		return "", err
 	}
 
@@ -27,7 +27,7 @@ func ConvertMarkdownToHTML(content string) (string, error) {
 	// Get the resulting HTML
 	html, err := doc.Html()
 	if err != nil {
-		global.Log.Error("get html err:", err)
+		global.Log.Error("get html err", err)
 		return "", err
 	}
 
