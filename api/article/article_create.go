@@ -2,15 +2,16 @@ package article
 
 import (
 	"fmt"
+	"math/rand"
+	"strconv"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/nsxz1114/blog/global"
 	"github.com/nsxz1114/blog/models"
 	"github.com/nsxz1114/blog/models/res"
 	"github.com/nsxz1114/blog/service/search_ser"
 	"github.com/nsxz1114/blog/utils"
-	"math/rand"
-	"strconv"
-	"time"
 )
 
 type ArticleRequest struct {
@@ -25,11 +26,10 @@ func (a Article) ArticleCreate(c *gin.Context) {
 	var req ArticleRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		res.FailWithError(err, &req, c)
+		res.FailWithCode(res.CodeInvalidParam, c)
 		return
 	}
 	_claims, _ := c.Get("claims")
-	fmt.Println(_claims)
 	claims := _claims.(*utils.CustomClaims)
 	userId := claims.UserID
 	html, err := utils.ConvertMarkdownToHTML(req.Content)
