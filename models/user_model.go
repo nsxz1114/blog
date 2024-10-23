@@ -11,5 +11,5 @@ type UserModel struct {
 	Email    string     `json:"email,select(info)" gorm:"comment:邮箱"`
 	Address  string     `json:"address,select(c|info)" gorm:"comment:地址"`
 	Token    string     `json:"token"`
-	Role     ctype.Role `json:"role,select(info)" gorm:"comment:身份,1管理员,2用户"`
+	Role     ctype.Role `json:"role,string,select(info)" gorm:"comment:身份,1管理员,2用户"`
 }
