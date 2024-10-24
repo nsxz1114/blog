@@ -1,6 +1,6 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
-import { ProductItem, Menu, MenuItem } from "../ui/navbar-menu";
+import { ProductItem, Menu, MenuItem } from "../../ui/navbar-menu";
 import { navList, navListType } from "@/api/system";
 
 export function NavbarDemo() {

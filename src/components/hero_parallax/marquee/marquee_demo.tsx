@@ -1,7 +1,6 @@
 ﻿import React, { useMemo } from "react";
-import { cn } from "@/lib/utils";
 import Marquee from "@/components/ui/marquee";
-import { AnimatedPinDemo } from "./3d_animated_pin_demo";
+import { AnimatedPinDemo } from "../marquee/3d_animated_pin/3d_animated_pin_demo";
 
 // ReviewCard 使用 React.memo 包装，避免不必要的重新渲染
 const ReviewCard = React.memo(

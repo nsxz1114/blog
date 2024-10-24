@@ -1,5 +1,5 @@
 ﻿"use client";
-import { PinContainer } from "../ui/3d-pin";
+import { PinContainer } from "../../../ui/3d-pin";
 import { Image } from "antd";
 import { Typography } from "antd";
 

@@ -1,5 +1,4 @@
-﻿import React from "react";
-import { Meteors } from "../ui/meteors";
+﻿import { Meteors } from "../ui/meteors";
 
 export function MeteorsDemo() {
   return (

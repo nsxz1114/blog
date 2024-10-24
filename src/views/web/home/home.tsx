@@ -1,6 +1,6 @@
 ﻿import "./home.css";
-import { OrbitingCirclesDemo } from "@/components/test/orbiting_circles_demo";
-import { HeroParallaxDemo } from "@/components/test/hero-parallax_demo";
+import { OrbitingCirclesDemo } from "@/components/orbiting_circles/orbiting_circles_demo";
+import { HeroParallaxDemo } from "@/components/hero_parallax/hero-parallax_demo";
 import { FadeComponent } from "@/components/ui/fade-component";
 import BackgroundMedia from "@/components/ui/backgroundmedia";
 

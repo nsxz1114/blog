@@ -3,7 +3,7 @@ import React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { MarqueeDemo } from "../test/marquee_demo";
+import { MarqueeDemo } from "../hero_parallax/marquee/marquee_demo";
 
 export const HeroParallax = ({
   products,

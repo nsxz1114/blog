@@ -1,20 +1,18 @@
 ﻿import React from "react";
-import "./nav_right.css";
+
 import { Dock, DockIcon } from "@/components/ui/dock";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
-export function Navright() {
+export function DockDemo() {
   return (
-    <div className="nav_right">
-      <Dock direction="middle">
-        {iconItems.map((iconItem, index) => (
-          <DockIcon key={index}>
-            <iconItem.icon className="size-6" />
-          </DockIcon>
-        ))}
-      </Dock>
-    </div>
+    <Dock direction="middle">
+      {iconItems.map((iconItem, index) => (
+        <DockIcon key={index}>
+          <iconItem.icon className="size-6" />
+        </DockIcon>
+      ))}
+    </Dock>
   );
 }
 
@@ -130,8 +128,8 @@ const Icons = {
   ),
 };
 const iconItems = [
-  { icon: Icons.gitHub },
-  { icon: Icons.weChat },
-  { icon: Icons.QQ },
-  { icon: Icons.email },
+  { icon: Icons.gitHub, url: "" },
+  { icon: Icons.weChat, url: "" },
+  { icon: Icons.QQ, url: "" },
+  { icon: Icons.email, url: "" },
 ];

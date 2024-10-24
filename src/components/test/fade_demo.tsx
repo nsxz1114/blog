@@ -1,5 +1,5 @@
 ﻿import { FadeComponent } from "../ui/fade-component";
-import { OrbitingCirclesDemo } from "@/components/test/orbiting_circles_demo";
+import { OrbitingCirclesDemo } from "@/components/orbiting_circles/orbiting_circles_demo";
 
 export function FadeComponentDemo() {
   return (

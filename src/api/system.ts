@@ -27,3 +27,16 @@ export function circleList(): Promise<
 > {
   return useAxios.get("/api/circlelist");
 }
+
+export interface projectListType {
+  title: string;
+  description: string;
+  link: string;
+  thumbnail: string;
+}
+
+export function projectList(): Promise<
+  baseResponse<listDataType<projectListType>>
+> {
+  return useAxios.get("/api/projectlist");
+}

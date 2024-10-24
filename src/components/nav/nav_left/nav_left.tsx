@@ -1,5 +1,5 @@
 ﻿import "./nav_left.css";
-import { NavbarDemo } from "../test/navbar_demo";
+import { NavbarDemo } from "./navbar";
 import { Link } from "react-router-dom";
 
 export function Navleft() {

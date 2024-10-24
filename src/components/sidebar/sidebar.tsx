@@ -77,7 +77,7 @@ const Sidebar: React.FC = () => {
                 className="h-[100vh]"
                 style={{ backgroundColor: "rgb(245, 245, 245)", width: collapsed ? 60 : 200, }}
                 mode="inline" inlineCollapsed={collapsed} items={items} />
-        
+
         </div>
     );
 };
