@@ -8,18 +8,11 @@ export function Navright() {
   return (
     <div className="nav_right">
       <Dock direction="middle">
-        <DockIcon>
-          <Icons.gitHub className="size-6" />
-        </DockIcon>
-        <DockIcon>
-          <Icons.weChat className="size-6" />
-        </DockIcon>
-        <DockIcon>
-          <Icons.QQ className="size-6" />
-        </DockIcon>
-        <DockIcon>
-          <Icons.email className="size-6" />
-        </DockIcon>
+        {iconItems.map((iconItem, index) => (
+          <DockIcon key={index}>
+            <iconItem.icon className="size-6" />
+          </DockIcon>
+        ))}
       </Dock>
     </div>
   );
@@ -136,3 +129,9 @@ const Icons = {
     </svg>
   ),
 };
+const iconItems = [
+  { icon: Icons.gitHub },
+  { icon: Icons.weChat },
+  { icon: Icons.QQ },
+  { icon: Icons.email },
+];

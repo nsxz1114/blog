@@ -1,62 +1,32 @@
 ﻿import OrbitingCircles from "@/components/ui/orbiting-circles";
 import { ThreeDCardDemo } from "./3d_card_demo";
+import { useEffect, useState } from "react";
+import { circleList, circleListType } from "@/api/system";
 
 export function OrbitingCirclesDemo() {
+  const [circleItems, setCircleItems] = useState<circleListType[]>([]);
+  useEffect(() => {
+    const fetchNavList = async () => {
+      const res = await circleList();
+      setCircleItems(res.data.list);
+    };
+    fetchNavList();
+  }, []);
   return (
     <div className="relative flex h-[100vh] w-[1000px] flex-col items-center justify-center overflow-hidden rounded-lg bg-background">
       <ThreeDCardDemo></ThreeDCardDemo>
-      {/* Inner Circles */}
-      <OrbitingCircles
-        className="size-[50px] border-none bg-transparent"
-        duration={20}
-        delay={20}
-        radius={280}
-      >
-        <Icons.es />
-      </OrbitingCircles>
-      <OrbitingCircles
-        className="size-[50px] border-none bg-transparent"
-        duration={15}
-        delay={10}
-        radius={280}
-      >
-        <Icons.mysql />
-      </OrbitingCircles>{" "}
-      <OrbitingCircles
-        className="size-[50px] border-none bg-transparent"
-        duration={25}
-        delay={10}
-        radius={280}
-      >
-        <Icons.redis />
-      </OrbitingCircles>
-      {/* Outer Circles (reverse) */}
-      <OrbitingCircles
-        className="size-[120px] border-none bg-transparent"
-        radius={330}
-        duration={20}
-        reverse
-      >
-        <Icons.golang />
-      </OrbitingCircles>
-      <OrbitingCircles
-        className="size-[80px] border-none bg-transparent"
-        radius={330}
-        duration={25}
-        delay={20}
-        reverse
-      >
-        <Icons.vue />
-      </OrbitingCircles>{" "}
-      <OrbitingCircles
-        className="size-[80px] border-none bg-transparent"
-        radius={330}
-        duration={15}
-        delay={20}
-        reverse
-      >
-        <Icons.react />
-      </OrbitingCircles>
+      {circleItems.map((circle, index) => (
+        <OrbitingCircles
+          key={index}
+          className={circle.className}
+          duration={circle.duration}
+          delay={circle.delay}
+          radius={circle.radius}
+          reverse={circle.reverse}
+        >
+          <circle.icon />
+        </OrbitingCircles>
+      ))}
     </div>
   );
 }
@@ -427,3 +397,14 @@ const Icons = {
     </svg>
   ),
 };
+
+// const circles = [
+//   { icon: Icons.es, className: "size-[50px] border-none bg-transparent", duration: 20, delay: 20, radius: 280 },
+//   { icon: Icons.mysql, className: "size-[50px] border-none bg-transparent", duration: 15, delay: 10, radius: 280 },
+//   { icon: Icons.redis, className: "size-[50px] border-none bg-transparent", duration: 25, delay: 10, radius: 280 },
+//   { icon: Icons.golang, className: "size-[120px] border-none bg-transparent", duration: 20, radius: 330, reverse: true },
+//   { icon: Icons.vue, className: "size-[80px] border-none bg-transparent", duration: 25, delay: 20, radius: 330, reverse: true },
+//   { icon: Icons.react, className: "size-[80px] border-none bg-transparent", duration: 15, delay: 20, radius: 330, reverse: true },
+// ];
+
+

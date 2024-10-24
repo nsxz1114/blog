@@ -1,26 +1,36 @@
 ﻿"use client";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductItem, Menu, MenuItem } from "../ui/navbar-menu";
-import { cn } from "@/lib/utils";
+import { navList, navListType } from "@/api/system";
 
 export function NavbarDemo() {
-  return <Navbar />;
-}
-
-function Navbar({ className }: { className?: string }) {
+  const [navItems, setNavItems] = useState<navListType[]>([]);
+  useEffect(() => {
+    const fetchNavList = async () => {
+      const res = await navList();
+      setNavItems(res.data.list);
+    };
+    fetchNavList();
+  }, []);
   const [active, setActive] = useState<string | null>(null);
   return (
-    <div className={cn("", className)}>
+    <div>
       <Menu setActive={setActive}>
-        <MenuItem setActive={setActive} active={active} item="Blog">
-          <ProductItem title="Blog" src="" description="" />
-        </MenuItem>
-        <MenuItem setActive={setActive} active={active} item="Record">
-          <ProductItem title="Record" src="" description="" />
-        </MenuItem>
-        <MenuItem setActive={setActive} active={active} item="Timeline">
-          <ProductItem title="Timeline" src="" description="" />
-        </MenuItem>
+        {navItems.map((navItem) => (
+          <MenuItem
+            key={navItem.item}
+            setActive={setActive}
+            active={active}
+            item={navItem.item}
+          >
+            <ProductItem
+              title={navItem.title}
+              href={navItem.href}
+              src={navItem.src}
+              description={navItem.description}
+            />
+          </MenuItem>
+        ))}
       </Menu>
     </div>
   );

@@ -1,5 +1,4 @@
 ﻿import axios from "axios";
-import React from "react";
 import { message } from "antd";
 
 export const useAxios = axios.create({

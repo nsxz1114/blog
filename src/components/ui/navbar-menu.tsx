@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Image } from "antd";
 
 const transition = {
@@ -25,10 +25,10 @@ export const MenuItem = ({
   children?: React.ReactNode;
 }) => {
   return (
-    <div onMouseEnter={() => setActive(item)} className="relative">
+    <div onMouseEnter={() => setActive(item)} className="relative ">
       <motion.p
         transition={{ duration: 0.3 }}
-        className=" cursor-pointer text-black hover:opacity-[0.9]"
+        className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
       >
         {item}
       </motion.p>
@@ -43,7 +43,7 @@ export const MenuItem = ({
               <motion.div
                 transition={transition}
                 layoutId="active" // layoutId ensures smooth animation
-                className="bg-white  backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] shadow-xl"
+                className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl"
               >
                 <motion.div
                   layout // layout ensures smooth animation
@@ -70,7 +70,7 @@ export const Menu = ({
   return (
     <nav
       onMouseLeave={() => setActive(null)} // resets the state
-      className="relative rounded-full border border-transparent shadow-input flex justify-center space-x-4 px-8"
+      className="relative rounded-full border border-transparent shadow-input flex justify-center space-x-4 px-8 py-6 "
     >
       {children}
     </nav>
@@ -80,15 +80,16 @@ export const Menu = ({
 export const ProductItem = ({
   title,
   description,
+  href,
   src,
 }: {
   title: string;
   description: string;
-  href?: string;
+  href: string;
   src: string;
 }) => {
   return (
-    <div className="flex space-x-2">
+    <Link to={href} className="flex space-x-2">
       <Image
         style={{ objectFit: "cover", height: "150px", width: "250px" }}
         preview={false}
@@ -102,7 +103,7 @@ export const ProductItem = ({
           {description}
         </p>
       </div>
-    </div>
+    </Link>
   );
 };
 
@@ -116,3 +117,6 @@ export const HoveredLink = ({ children, ...rest }: any) => {
     </Link>
   );
 };
+
+
+
